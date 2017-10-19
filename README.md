@@ -15,3 +15,11 @@ Hyunwook Shin
 - Frontend server (CSS/Javascript/Firewall)
 - ELB for Frontend
 - CloudFront [Initialized]
+
+## Resources Info
+Name | Resource | Type | Group | Private IP | Public IP | Availability Zone | Comment 
+-- | -- | -- | -- | -- | -- | --
+cmpe281p1b1 | EC2 | t | AutoScalingP1 | 172.31.8.190 | 13.58.128.114 |  us-east-2b | Compute Resource 1
+cmpe281p1b2 | EC2 | t | AutoScalingP1 | 172.31.9.104 | 18.216.74.19 |  us-east-2a | Compute Resource 2
+
+
