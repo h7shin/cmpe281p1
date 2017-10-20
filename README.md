@@ -26,3 +26,4 @@ origin-Primary | R53 | CNAME || origin.shincloudhw.info | shinhw2b1.s3.amazonaws
 origin-Secondary | R53 | CNAME || origin.shincloudhw.info | shinhw2b2.s3.amazonaws.com ||| Origin Secondary Failover Routing Policy
 bucket1 heath | R53 | health check | | shinhw2b1.s3.amazonaws.com |||| TCP Port 80 Health check on primary origin bucket
 bucket2 heath | R53 | health check | | shinhw2b2.s3.amazonaws.com |||| TCP Port 80 Health check on secondary origin bucket
+BackendHTTP | ElB | application | | ||| us-east-2a, us-east-2b | ELB for Backend EC2 instances (b1 and b2)
