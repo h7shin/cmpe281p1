@@ -12,8 +12,8 @@ class Row( object ):
       query = 'INSERT INTO {table} ( {fields} ) VALUES ( {values} )'
       fields,values = self.keysvalues()
       return query.format( table=self.__class__.__name__,
-                           fields=fields,
-                           values=values )
+                           fields=','.join( fields ),
+                           values=','.join( values ) )
 
    def keysvalues( self ):
       ''' Get lists of params and lists of values '''
@@ -21,20 +21,30 @@ class Row( object ):
       values = []
       for k, v in self.__dict__.iteritems():
          if k.endswith( '_' ):
-            keys.append( k )
+            keys.append( ''.join( k.split( '_' )[:-1] ) )
             values.append( '"' + v + '"' )
-      return ',',join( keys ), ','.join( values )
+      return keys, values
 
-   def update():
-      ''' TODO will do this later '''
+   def update( self ):
+      ''' TODO For now just return SQL query '''
+      query = 'UPDATE {table} SET {newpairs} WHERE {key} = "{identifier}"'
+      newpairs = []
+      fields, values = self.keysvalues()
+      for i in range( len( fields ) ):
+         pair = '%s = %s' % ( fields[i], values[i] )
+         newpairs.append( pair )
+      return query.format( table=self.__class__.__name__,
+                           newpairs=" , ".join( newpairs ),
+                           key=self.__class__.key,
+                           identifier=self.identifier() )
 
-   def delete():
+   def delete( self ):
       ''' TODO For now just return SQL query '''
       query = 'DELETE FROM {table} WHERE {condition}'
-      fields, values = self.keysValues()
+      fields, values = self.keysvalues()
       conditions = []
       for i in range( len( fields ) ):
-         condition = '%s = "%s"' % ( fields[i], valyes[i] )
+         condition = '%s = %s' % ( fields[i], values[i] )
          conditions.append( condition )
       return query.format( table=self.__class__.__name__,
                            condition=" AND ".join( conditions ) )
@@ -52,14 +62,26 @@ class User( Row ):
       self.lastname_ = lastname
       self.email_ = email
 
+   def identifier( self ):
+      return self.username_
+
    def username( self ):
       return self.username_
 
-   def firtname( self ):
+   def firstname( self ):
       return self.firstname_
 
    def email( self ):
       return self.email_
+
+   def lastnameIs( self, lastname ):
+      self.lastname_ = lastname
+
+   def firstnameIs( self, firstname ):
+      self.firstname_ = firstname
+
+   def emailIs( self, email ):
+      self.email_ = email
 
 class Object( Row ):
    '''
@@ -77,6 +99,9 @@ class Object( Row ):
       self.description_ = description
       self.updated_ = updated
       self.uploaded_ = uploaded
+
+   def identifier( self ):
+      return self.id_
 
    def id( self ):
       ''' returns object id '''
@@ -97,11 +122,18 @@ class Object( Row ):
    def uploaded( self ):
       return self.uploaded_
 
-   def setUpdated( self, time=datetime.datetime.now() ):
+   def updatedIS( self, time=datetime.datetime.now() ):
       self.updated_ = datetime.datetime.strftime( time, '%Y-%m-%d %H:%M:%S' )
 
-   def setUploaded( self, time=datetime.datetime.now() ):
+   def uploadedIs( self, time=datetime.datetime.now() ):
       self.uploaded_ = datetime.datetime.strftime( time, '%Y-%m-%d %H:%M:%S' )
+
+   def filenameIs( self, filename ):
+      self.filename_ = filename
+
+   def descriptionIs( self, description ):
+      self.description_ = description
+
 
 class RDS( object ):
    def __init__( self ):
@@ -114,14 +146,19 @@ class RDS( object ):
    def record( self, identifier, classtype ):
       query = 'SELECT * FROM {table} WHERE {key} = "{identifier}"'
       cursor = self.conn.cursor()
+      print query.format( table=classtype.__name__,
+                     key=classtype.key, identifier=identifier )
       cursor.execute( query.format( table=classtype.__name__,
                       key=classtype.key,
                       identifier=identifier ) )
-      return [ classtype( *row ) for row in cursor ]
+      return [ classtype( *row ) for row in cursor ][0]
 
    def searchfiles( self, username ):
       query = 'SELECT * FROM {table} WHERE {field} = "{identifier}"'
       cursor = self.conn.cursor()
+      print query.format( table='Object',
+                      field=Object.groupby,
+                      identifier=username )
       cursor.execute( query.format( table='Object',
                       field=Object.groupby,
                       identifier=username ) )
@@ -129,5 +166,9 @@ class RDS( object ):
 
 if __name__ == '__main__':
    rds = RDS()
-   print rds.record( '', Object )
-   print rds.searchfiles( 'charles' )
+   user = rds.record( 'charles01', User )
+   user.email = 'testuser@aaa.com'
+   print user.insert()
+   print user.update()
+   print user.delete()
+   print rds.searchfiles( 'charles01' )
