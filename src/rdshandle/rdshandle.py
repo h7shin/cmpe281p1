@@ -8,13 +8,14 @@ class Row( object ):
    Class about SQL row
    '''
    def insert( self, conn ):
-      ''' TODO For now just return SQL query '''
+      ''' Insert this object into database '''
       query = 'INSERT INTO {table} ( {fields} ) VALUES ( {values} )'
       fields,values = self.keysvalues()
-      conn.execute( query.format( table=self.__class__.__name__,
+      cursor= conn.cursor()
+      cursor.execute( query.format( table=self.__class__.__name__,
                                   fields=','.join( fields ),
                                   values=','.join( values ) ) )
-      conn.commit
+      conn.commit()
 
    def keysvalues( self ):
       ''' Get lists of params and lists of values '''
@@ -27,14 +28,15 @@ class Row( object ):
       return keys, values
 
    def update( self, conn ):
-      ''' TODO For now just return SQL query '''
+      ''' Update this object in the database '''
       query = 'UPDATE {table} SET {newpairs} WHERE {key} = "{identifier}"'
       newpairs = []
       fields, values = self.keysvalues()
       for i in range( len( fields ) ):
          pair = '%s = %s' % ( fields[i], values[i] )
          newpairs.append( pair )
-      conn.execute( query.format( table=self.__class__.__name__,
+      cursor = conn.cursor()
+      cursor.execute( query.format( table=self.__class__.__name__,
                            newpairs=" , ".join( newpairs ),
                            key=self.__class__.key,
                            identifier=self.identifier() ) )
@@ -48,7 +50,8 @@ class Row( object ):
       for i in range( len( fields ) ):
          condition = '%s = %s' % ( fields[i], values[i] )
          conditions.append( condition )
-      conn.execute( query.format( table=self.__class__.__name__,
+      cursor = conn.cursor()
+      cursor.execute( query.format( table=self.__class__.__name__,
                            condition=" AND ".join( conditions ) ) )
       conn.commit()
 
@@ -100,8 +103,8 @@ class Object( Row ):
       self.filename_ = filename
       self.username_ = username
       self.description_ = description
-      self.updated_ = updated
-      self.uploaded_ = uploaded
+      self.updated_ = datetime.datetime.strftime( uploaded, '%Y-%m-%d %H:%M:%S' )
+      self.uploaded_ = datetime.datetime.strftime( updated, '%Y-%m-%d %H:%M:%S' )
 
    def identifier( self ):
       return self.id_
@@ -176,7 +179,7 @@ class RDS( object ):
       cursor.execute( query.format( table='Object',
                       field=Object.groupby,
                       identifier=username ) )
-      return [ classtype( *row ) for row in cursor ]
+      return [ Object( *row ) for row in cursor ]
 
 if __name__ == '__main__':
    rds = RDS()
