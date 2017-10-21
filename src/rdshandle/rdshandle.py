@@ -7,13 +7,14 @@ class Row( object ):
    '''
    Class about SQL row
    '''
-   def insert( self ):
+   def insert( self, conn ):
       ''' TODO For now just return SQL query '''
       query = 'INSERT INTO {table} ( {fields} ) VALUES ( {values} )'
       fields,values = self.keysvalues()
-      return query.format( table=self.__class__.__name__,
-                           fields=','.join( fields ),
-                           values=','.join( values ) )
+      conn.execute( query.format( table=self.__class__.__name__,
+                                  fields=','.join( fields ),
+                                  values=','.join( values ) ) )
+      conn.commit
 
    def keysvalues( self ):
       ''' Get lists of params and lists of values '''
@@ -25,7 +26,7 @@ class Row( object ):
             values.append( '"' + v + '"' )
       return keys, values
 
-   def update( self ):
+   def update( self, conn ):
       ''' TODO For now just return SQL query '''
       query = 'UPDATE {table} SET {newpairs} WHERE {key} = "{identifier}"'
       newpairs = []
@@ -33,21 +34,23 @@ class Row( object ):
       for i in range( len( fields ) ):
          pair = '%s = %s' % ( fields[i], values[i] )
          newpairs.append( pair )
-      return query.format( table=self.__class__.__name__,
+      conn.execute( query.format( table=self.__class__.__name__,
                            newpairs=" , ".join( newpairs ),
                            key=self.__class__.key,
-                           identifier=self.identifier() )
+                           identifier=self.identifier() ) )
+      conn.commit()
 
-   def delete( self ):
-      ''' TODO For now just return SQL query '''
+   def delete( self, conn ):
+      ''' Deletes this object from database '''
       query = 'DELETE FROM {table} WHERE {condition}'
       fields, values = self.keysvalues()
       conditions = []
       for i in range( len( fields ) ):
          condition = '%s = %s' % ( fields[i], values[i] )
          conditions.append( condition )
-      return query.format( table=self.__class__.__name__,
-                           condition=" AND ".join( conditions ) )
+      conn.execute( query.format( table=self.__class__.__name__,
+                           condition=" AND ".join( conditions ) ) )
+      conn.commit()
 
 
 class User( Row ):
@@ -143,11 +146,25 @@ class RDS( object ):
       db = 'cmpe281p1'
       self.conn = MySQLdb.connect( host=host, user=user, passwd=passwd, db=db )
 
-   def record( self, identifier, classtype ):
+   def insert( self, entries ):
+      ''' Insert the entries in to db '''
+      for entry in entries:
+         entry.insert( self.conn )
+
+   def update( self, entries ):
+      ''' Update entries in the db '''
+      for entry in entries:
+         entry.update( self.conn )
+
+   def delete( self, entries ):
+      ''' Delete entries in the db '''
+      for entry in entries:
+         entry.delete( self.conn )
+
+   def fetch( self, identifier, classtype ):
+      ''' Fetch new object with primary key as <identifier> '''
       query = 'SELECT * FROM {table} WHERE {key} = "{identifier}"'
       cursor = self.conn.cursor()
-      print query.format( table=classtype.__name__,
-                     key=classtype.key, identifier=identifier )
       cursor.execute( query.format( table=classtype.__name__,
                       key=classtype.key,
                       identifier=identifier ) )
@@ -156,9 +173,6 @@ class RDS( object ):
    def searchfiles( self, username ):
       query = 'SELECT * FROM {table} WHERE {field} = "{identifier}"'
       cursor = self.conn.cursor()
-      print query.format( table='Object',
-                      field=Object.groupby,
-                      identifier=username )
       cursor.execute( query.format( table='Object',
                       field=Object.groupby,
                       identifier=username ) )
@@ -166,9 +180,6 @@ class RDS( object ):
 
 if __name__ == '__main__':
    rds = RDS()
-   user = rds.record( 'charles01', User )
+   user = rds.fetch( 'charles01', User )
    user.email = 'testuser@aaa.com'
-   print user.insert()
-   print user.update()
-   print user.delete()
    print rds.searchfiles( 'charles01' )
