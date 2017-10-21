@@ -10,23 +10,23 @@ import BaseHTTPServer
 
 WEBSERVER_PORT = 8000
 
-class HTTPHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
    '''
    handle requests based on the method
    '''
-   def post(self):
+   def post( self ):
       ''' handles post request '''
       pass
 
-   def do_GET(self): #pylint: disable=invalid-name
+   def do_GET( self ): #pylint: disable=invalid-name
       ''' handles get request '''
-      self.send_response(200)
+      self.send_response( 200 )
 
 def run_backend_server():
    '''
    run HTTP server listening to the port
    '''
-   BaseHTTPServer.HTTPServer(('', WEBSERVER_PORT), HTTPHandler).serve_forever()
+   BaseHTTPServer.HTTPServer( ( '', WEBSERVER_PORT ), HTTPHandler ).serve_forever()
 
 if __name__ == '__main__':
    run_backend_server()
