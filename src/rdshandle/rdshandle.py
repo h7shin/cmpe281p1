@@ -11,7 +11,7 @@ class Row( object ):
    def insert( self, conn ):
       ''' Insert this object into database '''
       query = 'INSERT INTO {table} ( {fields} ) VALUES ( {values} )'
-      fields,values = self.keysvalues( False )
+      fields,values = self.keysvalues( True )
       cursor= conn.cursor()
       cursor.execute( query.format( table=self.__class__.__name__,
                                   fields=','.join( fields ),
@@ -24,7 +24,7 @@ class Row( object ):
       values = []
       for k, v in self.__dict__.iteritems():
          if k.endswith( '_' ) and (
-               not skipKey or k != self.__class__.key ):
+               not skipKey or k != self.__class__.key + '_' ):
             keys.append( ''.join( k.split( '_' )[:-1] ) )
             values.append( '"' + v + '"' )
       return keys, values
@@ -33,7 +33,7 @@ class Row( object ):
       ''' Update this object in the database '''
       query = 'UPDATE {table} SET {newpairs} WHERE {key} = "{identifier}"'
       newpairs = []
-      fields, values = self.keysvalues( True )
+      fields, values = self.keysvalues( False )
       for i in range( len( fields ) ):
          pair = '%s = %s' % ( fields[i], values[i] )
          newpairs.append( pair )
@@ -108,7 +108,7 @@ class Object( Row ):
       self.description_ = description
       self.updated_ = datetime.datetime.strftime( uploaded, '%Y-%m-%d %H:%M:%S' )
       self.uploaded_ = datetime.datetime.strftime( updated, '%Y-%m-%d %H:%M:%S' )
-      self.bucketkey = bucketkey
+      self.bucketkey_ = bucketkey
 
    def identifier( self ):
       return self.id_
