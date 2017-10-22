@@ -113,8 +113,8 @@ class Object( Row ):
       self.filename_ = filename
       self.username_ = username
       self.description_ = description
-      self.updated_ = datetime.datetime.strftime( uploaded, '%Y-%m-%d %H:%M:%S' )
-      self.uploaded_ = datetime.datetime.strftime( updated, '%Y-%m-%d %H:%M:%S' )
+      self.updated_ = datetime.datetime.strftime( updated, '%Y-%m-%d %H:%M:%S' )
+      self.uploaded_ = datetime.datetime.strftime( uploaded, '%Y-%m-%d %H:%M:%S' )
       self.bucketkey_ = bucketkey
 
    def identifier( self ):
@@ -142,7 +142,9 @@ class Object( Row ):
    def bucketkey( self ):
       return self.bucketkey_
 
-   def updatedIS( self, time=datetime.datetime.now() ):
+   def updatedIs( self ):
+      time = datetime.datetime.now()
+      print time
       self.updated_ = datetime.datetime.strftime( time, '%Y-%m-%d %H:%M:%S' )
 
    def uploadedIs( self, time=datetime.datetime.now() ):
