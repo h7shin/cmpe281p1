@@ -11,8 +11,24 @@ function submit() {
    console.log( requester.responseText );
 }
 
+function fetchurl( id ) {
+   requester =  new XMLHttpRequest();
+   requester.open( 'GET', 'http://dock2:8000?action=fetchurl&id=' + id, true );
+   requester.send( null );
+   requester.onreadystatechange = function() {
+      var info;
+	  if ( requester.readyState == XMLHttpRequest.DONE ) {
+	     console.log( requester.status );
+         console.log( 'response :' +  requester.response );
+		 if ( requester.status == 200 ) {
+		    console.log( 'Received an OK response' );
+		    console.log( JSON.parse( requester.response ) );
+	     }
+	  }
+   }
+}
+		
 function populate() {
- 
    requester =  new XMLHttpRequest();
    requester.open( 'GET', 'http://dock2:8000?action=list&username=charles01', true );
    requester.send( null );
@@ -25,10 +41,15 @@ function populate() {
 		 if ( requester.status == 200 ) {
 		    console.log( 'Received an OK response' );
 		    info = JSON.parse( requester.response );
-		    result = info.result
-			for ( i = 0; i < result.length; i++ ) {
+			var requesters = [];
+			for ( i = 0; i < info.result.length; i++ ) {
+				
+				
+				
 			    document.getElementById( 'files' ).innerHTML += '<div class="file" id="file' + i 
-				+ '" onmouseover="highlight(this)" onmouseleave="recover(this)">'
+				+ '" onmouseover="highlight(this)" onmouseleave="recover(this)"'
+				+ '" onclick="fetchurl( \'' + info.result[i].id_ + '\')"'
+                + '>'
 				+ info.result[i].filename_
 				+ '     [update] [delete]</div>';
 		    }
