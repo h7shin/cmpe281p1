@@ -130,7 +130,7 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
             identifier = tokenized[ 'id' ]
             fileObj = rds.fetch( identifier, rdshandle.Object )
             distUrl = '.'.join( cloudfront.getDistUrl().split('.')[:-1] )
-            result = 'http://%s/%s' % ( distUrl, fileObj.filename() )
+            result = 'http://%s/%s' % ( distUrl, fileObj.bucketkey() )
             wrapper = { 'error': '', 'result' : result }
          else:
             wrapper = { 'error': 'action not found', 'result' : '' }
