@@ -10,6 +10,7 @@ import BaseHTTPServer
 import boto3
 import os
 import json
+import cloudfront
 
 AWS_ACCESS_ID = os.environ.get( 'AWS_ACCESS_ID' )
 AWS_SECRET_KEY = os.environ.get( 'AWS_SECRET_KEY' )
@@ -36,18 +37,26 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       self.send_header( 'Content-type', 'text/html' )
       self.end_headers()
       tokenized = parseQueryString( self.path )
-      result = "Not processed"
+      wrapper = { 'error' : 'invalid request', 'result': ''}
       if 'action' in tokenized:
          rds = rdshandle.RDS()
          if tokenized[ 'action' ] == 'about':
             result = rds.fetch( tokenized[ 'username' ], rdshandle.User )
-            result = result.__dict__ # TODO for now
+            result = result.__dict__
+            wrapper = { 'error': '', 'result': result }
          elif tokenized[ 'action' ] == 'list':
             resultList= rds.searchfiles( tokenized[ 'username' ] )
             result = [ result.__dict__ for result in resultList ]
+            wrapper = { 'error': '', 'result': result }
+         elif tokenized[ 'action' ] == 'fetchurl':
+            identifier = tokenized[ 'id' ]
+            fileObj = rds.fetch( identifier, rdshandle.Object )
+            distUrl = '.'.join( cloudfront.getDistUrl().split('.')[:-1] )
+            result = 'http://%s/%s' % ( distUrl, fileObj.filename() )
+            wrapper = { 'error': '', 'result' : result }
          else:
-            result = 'action not found'
-      self.wfile.write( json.dumps( result ) )
+            wrapper = { 'error': 'action not found', 'result' : '' }
+      self.wfile.write( json.dumps( wrapper ) )
 
 def run_backend_server():
    '''
