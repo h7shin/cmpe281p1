@@ -31,7 +31,7 @@ def writeTempFile( content ):
    n.close()
    return n.name
 
-def toS3( filecontent, extension='' ):
+def toS3( filecontent, extension='', bucketkey='' ):
    path = writeTempFile( filecontent )
    print path
    s3 = boto3.resource('s3',
@@ -45,11 +45,14 @@ def toS3( filecontent, extension='' ):
       keygen.update( filecontent )
       hashstring = keygen.hexdigest()
       print 'HASH is', hashstring
-      hashstring += '.' + extension
-      s3.Bucket( 'shinhw2b1' ).put_object( Key=hashstring, Body=binary )
+      if bucketkey is '':
+         bucketkey = hashstring + '.' + extension
+      else:
+         print 'Existing bucket key is' + bucketkey
+      s3.Bucket( 'shinhw2b1' ).put_object( Key=bucketkey, Body=binary )
    finally:
       os.remove( path )
-   return hashstring
+   return bucketkey
 
 def deleteFromS3( bucketkey ):
    '''
@@ -68,6 +71,8 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       ''' handles PUT request '''
       length = self.headers[ 'Content-Length' ]
       username = self.headers[ 'username' ]
+      uploadtype = self.headers[ 'uploadtype' ]
+      fileid = self.headers[ 'fileid' ]
       self.send_response( 200 )
       self.send_header( 'Content-type', 'text/html' )
       content = self.rfile.read( int( length ) )
@@ -96,14 +101,21 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       else:
          ext = ''
 
-      # insert into S3 bucket
-      bucketkey = toS3( filecontent, ext )
-
-      # save into db
       rds = rdshandle.RDS()
-      newFile = rdshandle.Object( '', filename, username, '',  bucketkey=bucketkey )
-      print newFile.bucketkey(), 'is the new bucket key'
-      rds.insert( ( newFile, ) )
+      if uploadtype == 'new':
+         # insert into S3 bucket
+         bucketkey = toS3( filecontent, ext ) # bucket key will be generated
+
+         # save into db
+         newFile = rdshandle.Object( '', filename, username, '',  bucketkey=bucketkey )
+         print newFile.bucketkey(), 'is the new bucket key'
+         rds.insert( ( newFile, ) )
+
+      elif uploadtype == 'update':
+         oldFile = rds.fetch( fileid, rdshandle.Object )
+         bucketkey = oldFile.bucketkey()
+         print bucketkey, 'is the old bucket key'
+         assert bucketkey == toS3( filecontent, ext, bucketkey )
 
       result = 'success'
       wrapper = { 'error' : '', 'result':  result }
@@ -116,6 +128,8 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       self.send_header( 'Access-Control-Allow-Headers', 'Content-type' )
       self.send_header( 'Access-Control-Allow-Headers', 'Content-length' )
       self.send_header( 'Access-Control-Allow-Headers', 'username' )
+      self.send_header( 'Access-Control-Allow-Headers', 'uploadtype' )
+      self.send_header( 'Access-Control-Allow-Headers', 'fileid' )
       self.end_headers()
 
    def do_GET( self ): #pylint: disable=invalid-name
