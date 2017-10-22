@@ -9,6 +9,7 @@ from rdshandle import rdshandle
 import BaseHTTPServer
 import boto3
 import os
+import json
 
 AWS_ACCESS_ID = os.environ.get( 'AWS_ACCESS_ID' )
 AWS_SECRET_KEY = os.environ.get( 'AWS_SECRET_KEY' )
@@ -46,7 +47,7 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
             result = [ result.__dict__ for result in resultList ]
          else:
             result = 'action not found'
-      self.wfile.write( str(result) )
+      self.wfile.write( json.dumps( result ) )
 
 def run_backend_server():
    '''
