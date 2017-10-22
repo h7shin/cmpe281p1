@@ -115,6 +115,8 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
          oldFile = rds.fetch( fileid, rdshandle.Object )
          bucketkey = oldFile.bucketkey()
          print bucketkey, 'is the old bucket key'
+         oldFile.updatedIs() # will be set to current
+         rds.update( ( oldFile, ) )
          assert bucketkey == toS3( filecontent, ext, bucketkey )
 
       result = 'success'
@@ -163,6 +165,7 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
          fileObj = rds.fetch( fileid, rdshandle.Object )
          fileObj.filenameIs( filename )
          fileObj.descriptionIs( description ) 
+         fileObj.updatedIs() # will be set to current
          rds.update( ( fileObj, ) )
          wrapper = { 'error' : '', 'result': 'Updated!' }
       except Exception, e:
