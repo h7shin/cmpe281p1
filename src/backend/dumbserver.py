@@ -5,6 +5,7 @@ This is a barebone server implementation
 To be used by the backend EC2 servers
 '''
 
+from rdshandle import rdshandle
 import BaseHTTPServer
 import boto3
 import os
@@ -28,13 +29,24 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       ''' handles get request '''
       def parseQueryString( path ):
          tokens = path.replace( '/?', '' ).split( '&' )
-         return [ t.split( '=' ) for t in tokens if t ]
+         return dict( [ t.split( '=' ) for t in tokens if '=' in t ] )
 
       self.send_response( 200 )
       self.send_header( 'Content-type', 'text/html' )
       self.end_headers()
       tokenized = parseQueryString( self.path )
-      self.wfile.write( str(tokenized) )
+      result = "Not processed"
+      if 'action' in tokenized:
+         rds = rdshandle.RDS()
+         if tokenized[ 'action' ] == 'about':
+            result = rds.fetch( tokenized[ 'username' ], rdshandle.User )
+            result = result.__dict__ # TODO for now
+         elif tokenized[ 'action' ] == 'list':
+            resultList= rds.searchfiles( tokenized[ 'username' ] )
+            result = [ result.__dict__ for result in resultList ]
+         else:
+            result = 'action not found'
+      self.wfile.write( str(result) )
 
 def run_backend_server():
    '''
