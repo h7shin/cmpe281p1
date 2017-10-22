@@ -13,7 +13,6 @@ import md5
 import json
 import cloudfront
 import tempfile
-import cgi
 
 AWS_ACCESS_ID = os.environ.get( 'AWS_ACCESS_ID' )
 AWS_SECRET_KEY = os.environ.get( 'AWS_SECRET_KEY' )
