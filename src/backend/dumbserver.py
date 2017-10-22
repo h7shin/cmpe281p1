@@ -31,7 +31,7 @@ def writeTempFile( content ):
    n.close()
    return n.name
 
-def toS3( filecontent ):
+def toS3( filecontent, extension='' ):
    path = writeTempFile( filecontent )
    print path
    s3 = boto3.resource('s3',
@@ -44,7 +44,8 @@ def toS3( filecontent ):
       keygen = md5.new()
       keygen.update( filecontent )
       hashstring = keygen.hexdigest()
-      print hashstring
+      print 'HASH is', hashstring
+      hashstring += '.' + extension
       s3.Bucket( 'shinhw2b1' ).put_object( Key=hashstring, Body=binary )
    finally:
       os.remove( path )
@@ -79,8 +80,15 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       filename = lines[1].split( '"' )[3]
       filecontent = '\n'.join( lines[4:-2] )
 
+      # Add suffix to bucket key so that browser
+      # can open it easily
+      if '.' in filename:
+         ext = filename.split( '.' )[-1]
+      else:
+         ext = ''
+
       # insert into S3 bucket
-      bucketkey = toS3( filecontent )
+      bucketkey = toS3( filecontent, ext )
 
       # save into db
       rds = rdshandle.RDS()
