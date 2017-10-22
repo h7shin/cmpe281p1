@@ -25,7 +25,7 @@ function fetchurl( id ) {
 			info = JSON.parse( requester.response );
 			console.log( 'id is' + id );
 		    console.log( 'info is' + info );
-			document.getElementById( id ).innerHTML = '<a href="' + info.result + '">Download</a>';
+			document.getElementById( id ).innerHTML += '<a href="' + info.result + '"> [download] </a>';
 	     }
 	  }
    }
