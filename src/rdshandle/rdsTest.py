@@ -38,8 +38,10 @@ class TestRdsHandle( unittest.TestCase ):
       bob = User( 'bobby', 'Bob', 'Smith', 'bobby@test.test' )
       self.rds.insert( ( bob, ) )
 
-      flower = Object( '01', 'flower.png', 'bobby', 'Picture of a flower' ) 
-      note = Object( '02', 'note.txt', 'bobby', 'Some important notes' )
+      flower = Object( '01', 'flower.png', 'bobby', 'Picture of a flower',
+                       bucketkey='ABC' ) 
+      note = Object( '02', 'note.txt', 'bobby', 'Some important notes',
+                      bucketkey='DEF' )
       self.rds.insert( ( flower, note ) )
 
       assert self.rds.fetch( '01', Object ).filename() == 'flower.png'

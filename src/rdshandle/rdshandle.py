@@ -100,13 +100,15 @@ class Object( Row ):
 
    def __init__( self, id, filename, username, description,
                  uploaded=datetime.datetime.now(),
-                 updated=datetime.datetime.now() ):
+                 updated=datetime.datetime.now(),
+                 bucketkey="" ):
       self.id_ = id
       self.filename_ = filename
       self.username_ = username
       self.description_ = description
       self.updated_ = datetime.datetime.strftime( uploaded, '%Y-%m-%d %H:%M:%S' )
       self.uploaded_ = datetime.datetime.strftime( updated, '%Y-%m-%d %H:%M:%S' )
+      self.bucketkey = bucketkey
 
    def identifier( self ):
       return self.id_
@@ -130,6 +132,9 @@ class Object( Row ):
    def uploaded( self ):
       return self.uploaded_
 
+   def bucketkey( self ):
+      return self.bucketkey_
+
    def updatedIS( self, time=datetime.datetime.now() ):
       self.updated_ = datetime.datetime.strftime( time, '%Y-%m-%d %H:%M:%S' )
 
@@ -142,6 +147,8 @@ class Object( Row ):
    def descriptionIs( self, description ):
       self.description_ = description
 
+   def bucketkeyIs( self, bucketkey ):
+      self.bucketkey_ = bucketkey
 
 class RDS( object ):
    def __init__( self ):
