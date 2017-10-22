@@ -21,6 +21,9 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
    def do_GET( self ): #pylint: disable=invalid-name
       ''' handles get request '''
       self.send_response( 200 )
+      self.send_header( 'Content-type', 'text/html' )
+      self.end_headers()
+      self.wfile.write( self.path )
 
 def run_backend_server():
    '''
