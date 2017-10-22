@@ -22,7 +22,10 @@ function fetchurl( id ) {
          console.log( 'response :' +  requester.response );
 		 if ( requester.status == 200 ) {
 		    console.log( 'Received an OK response' );
-		    console.log( JSON.parse( requester.response ) );
+			info = JSON.parse( requester.response );
+			console.log( 'id is' + id );
+		    console.log( 'info is' + info );
+			document.getElementById( id ).innerHTML = '<a href="' + info.result + '">Download</a>';
 	     }
 	  }
    }
@@ -46,8 +49,8 @@ function populate() {
 				
 				
 				
-			    document.getElementById( 'files' ).innerHTML += '<div class="file" id="file' + i 
-				+ '" onmouseover="highlight(this)" onmouseleave="recover(this)"'
+			    document.getElementById( 'files' ).innerHTML += '<div class="file" id=' + info.result[i].id_ 
+				+ ' onmouseover="highlight(this)" onmouseleave="recover(this)"'
 				+ '" onclick="fetchurl( \'' + info.result[i].id_ + '\')"'
                 + '>'
 				+ info.result[i].filename_
