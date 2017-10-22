@@ -76,7 +76,7 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       assert '----' in lines [-2]
 
       # extract the inner data
-      filename = lines[1].split( '"' )[1]
+      filename = lines[1].split( '"' )[3]
       filecontent = '\n'.join( lines[4:-2] )
 
       # insert into S3 bucket
@@ -134,6 +134,7 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
             wrapper = { 'error': '', 'result' : result }
          else:
             wrapper = { 'error': 'action not found', 'result' : '' }
+      print wrapper
       self.wfile.write( json.dumps( wrapper ) )
 
 def run_backend_server():
