@@ -51,6 +51,15 @@ def toS3( filecontent, extension='' ):
       os.remove( path )
    return hashstring
 
+def deleteFromS3( bucketkey ):
+   '''
+   Delete the file with bucketkey from S3
+   '''
+   s3 = boto3.client( 's3',
+                      aws_access_key_id=AWS_ACCESS_ID,
+                      aws_secret_access_key=AWS_SECRET_KEY )
+   s3.delete_object( Key=bucketkey, Bucket='shinhw2b1' )
+
 class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
    '''
    handle requests based on the method
@@ -127,13 +136,42 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
       if 'action' in tokenized:
          rds = rdshandle.RDS()
          if tokenized[ 'action' ] == 'about':
-            result = rds.fetch( tokenized[ 'username' ], rdshandle.User )
-            result = result.__dict__
-            wrapper = { 'error': '', 'result': result }
+            try:
+               if 'username' in tokenized:
+                  result = rds.fetch( tokenized[ 'username' ], rdshandle.User )
+               elif 'id' in tokenized:
+                  result = rds.fetch( tokenized[ 'id' ], rdshandle.Object )
+               result = result.__dict__
+               wrapper = { 'error': '', 'result': result }
+            except IndexError:
+               wrapper = { 'error': 'File not found', 'result': 'File is missing' }
+
          elif tokenized[ 'action' ] == 'list':
             resultList= rds.searchfiles( tokenized[ 'username' ] )
             result = [ result.__dict__ for result in resultList ]
             wrapper = { 'error': '', 'result': result }
+         elif tokenized[ 'action' ] == 'delete':
+            try:
+               identifier = tokenized[ 'id' ]
+               print 'Fetching File Object from RDS'
+               fileObj = rds.fetch( identifier, rdshandle.Object )
+               print 'Deleting from S3'
+               deleteFromS3( fileObj.bucketkey() )
+               print 'Removing File Object from RDS'
+               rds.delete( ( fileObj, ) )
+               try:
+                  rds.fetch( identifier, rdshandle.Object )
+                  # File is still found
+                  wrapper = { 'error': 'File not deleted', 'result': '' }
+               except:
+                  # File no longer found
+                  wrapper = { 'error': '', 'result' : 'file successfully deleted' }
+            except Exception as e:
+               # Serious error, could result in
+               # state inconsistencies between S3 and RDS
+               print str( e )
+               wrapper = { 'error': 'File not deleted', 'result': str( e ) }
+
          elif tokenized[ 'action' ] == 'fetchurl':
             identifier = tokenized[ 'id' ]
             fileObj = rds.fetch( identifier, rdshandle.Object )

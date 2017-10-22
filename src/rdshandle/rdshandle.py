@@ -26,7 +26,7 @@ class Row( object ):
          if k.endswith( '_' ) and (
                not skipKey or k != self.__class__.key + '_' ):
             keys.append( ''.join( k.split( '_' )[:-1] ) )
-            values.append( '"' + v + '"' )
+            values.append( '"' + str( v ) + '"' )
       return keys, values
 
    def update( self, conn ):
@@ -47,10 +47,13 @@ class Row( object ):
    def delete( self, conn ):
       ''' Deletes this object from database '''
       query = 'DELETE FROM {table} WHERE {condition}'
+      print 'Getting the fields...'
       fields, values = self.keysvalues()
       conditions = []
+      print 'Forming queries...'
       for i in range( len( fields ) ):
-         condition = '%s = %s' % ( fields[i], values[i] )
+         condition = '%s = %s' % ( str( fields[i] ), str( values[i] ) )
+         print condition
          conditions.append( condition )
       cursor = conn.cursor()
       cursor.execute( query.format( table=self.__class__.__name__,
