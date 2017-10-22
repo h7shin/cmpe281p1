@@ -42,6 +42,12 @@ Name | Resource | Type | Monitors | Comment
 bucket1 heath | R53 | health check | shinhw2b1.s3.amazonaws.com | TCP Port 80 Health check on primary origin bucket
 bucket2 heath | R53 | health check | shinhw2b2.s3.amazonaws.com | TCP Port 80 Health check on secondary origin bucket
 
+### Failover Route (Route 53)
+CNAME | FQDN | Target | Health Check
+ --   |  --  |  --    | --
+dist1 | dist1.hyunwookshin.com | de4hx48qic7v4.cloudfront.net | bucket1 health
+dist1 | dist1.hyunwookshin.com | d1ol4nkxls3lbv.cloudfront.net | bucket2 health
+
 ### ELB Backend
 Name | resource | type | availability zone | comment 
  -- | -- | -- | -- | -- 
