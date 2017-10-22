@@ -1,6 +1,7 @@
 function submit() {
    requester =  new XMLHttpRequest();
    var data = new FormData();
+   document.getElementById( 'status' ).innerHTML = 'Uploading... Please Wait'
    requester.open( 'POST', 'http://dock2:8000', true );
    data.append( 'filetoupload', document.getElementById("filetoupload").files[0] );
    requester.setRequestHeader( 'Content-type', 'multipart/mixed' );
@@ -9,6 +10,13 @@ function submit() {
    console.log( requester.status );
    console.log( requester.response );
    console.log( requester.responseText );
+   requester.onreadystatechange = function() {
+      // refresh the page
+      if ( requester.readyState == XMLHttpRequest.DONE ) {
+         window.location.href = "index.html";
+		 document.getElementById( 'status' ).innerHTML = 'Finished Uploading the file'
+	  }
+   }
 }
 
 function fetchurl( id ) {
