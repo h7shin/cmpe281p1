@@ -33,7 +33,7 @@ function fetchurl( id ) {
 			info = JSON.parse( requester.response );
 			console.log( 'id is' + id );
 		    console.log( 'info is' + info );
-			document.getElementById( id ).innerHTML += '<a href="' + info.result + '"> [download] </a>';
+			document.getElementById( 'download' + id ).innerHTML = '<a href="' + info.result + '"> [download] </a>';
 	     }
 	  }
    }
@@ -59,10 +59,10 @@ function populate() {
 				
 			    document.getElementById( 'files' ).innerHTML += '<div class="file" id=' + info.result[i].id_ 
 				+ ' onmouseover="highlight(this)" onmouseleave="recover(this)"'
-				+ '" onclick="fetchurl( \'' + info.result[i].id_ + '\')"'
                 + '>'
 				+ info.result[i].filename_
-				+ '     [update] [delete]</div>';
+				+ ' -  <a id=download'+ info.result[i].id_ +' onclick="fetchurl( \'' + info.result[i].id_ + '\')">[Get Link]</a> '
+				+ '[update] <a href="delete.php?id=' + info.result[i].id_ + '">[delete]</a></div>';
 		    }
          } else {
 		    console.log( 'Received NOT OK response' );

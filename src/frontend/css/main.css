@@ -5,6 +5,8 @@
    font-family : arial;
    border-color : gray;
    border-width : 2px;
+   cursor: pointer;
+   cursor: hand;
 }
 
 .field {
@@ -17,7 +19,7 @@
 }
 
 a {
-   color : blue;
+   color : black;
    font-family : arial;
 }
 #banner {
