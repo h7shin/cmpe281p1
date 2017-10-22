@@ -38,6 +38,10 @@ class Row( object ):
          pair = '%s = %s' % ( fields[i], values[i] )
          newpairs.append( pair )
       cursor = conn.cursor()
+      print query.format( table=self.__class__.__name__,
+                           newpairs=" , ".join( newpairs ),
+                           key=self.__class__.key,
+                           identifier=self.identifier() )
       cursor.execute( query.format( table=self.__class__.__name__,
                            newpairs=" , ".join( newpairs ),
                            key=self.__class__.key,

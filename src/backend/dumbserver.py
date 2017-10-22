@@ -124,13 +124,52 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
    def do_OPTIONS( self ):
       self.send_response( 200 )
       self.send_header( 'Access-Control-Allow-Origin', '*' )
-      self.send_header( 'Access-Control-Allow-Methods', 'OPTIONS, POST, GET' )
+      # need to add these otherwise it won't call the methods
+      self.send_header( 'Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT' )
       self.send_header( 'Access-Control-Allow-Headers', 'Content-type' )
       self.send_header( 'Access-Control-Allow-Headers', 'Content-length' )
       self.send_header( 'Access-Control-Allow-Headers', 'username' )
       self.send_header( 'Access-Control-Allow-Headers', 'uploadtype' )
       self.send_header( 'Access-Control-Allow-Headers', 'fileid' )
       self.end_headers()
+
+   def do_PUT( self ):
+      self.send_response( 200 )
+      self.send_header( 'Access-Control-Allow-Origin', '*' )
+      self.send_header( 'Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT' )
+      self.send_header( 'Access-Control-Allow-Headers', 'Content-type' )
+      self.send_header( 'Access-Control-Allow-Headers', 'Content-length' )
+      length = self.headers[ 'Content-Length' ]
+      self.end_headers()
+      content = self.rfile.read( int( length ))
+      lines = content.split( '\n')
+      print length, 'is length'
+      print content, 'is content'
+
+      # Some sanity check on file contents
+      assert '----' in lines[0]
+      assert 'Content-Disposition' in lines[1]
+      fileid = lines[ 3 ]
+      assert '----' in lines[4]
+      assert 'Content-Disposition' in lines[5]
+      filename = lines[ 7 ]
+      assert '----' in lines[-2]
+      description = '\n'.join( lines[ 10: -2 ] ).strip()
+      print 'File id  is', fileid
+      print 'Filename is', filename
+      print 'Description is', description
+      try:
+         rds = rdshandle.RDS()
+         fileObj = rds.fetch( fileid, rdshandle.Object )
+         fileObj.filenameIs( filename )
+         fileObj.descriptionIs( description ) 
+         rds.update( ( fileObj, ) )
+         wrapper = { 'error' : '', 'result': 'Updated!' }
+      except Exception, e:
+         print 'Internal error', str(e)
+         wrapper = { 'error' : 'Internal error updating', 'result':  str(e) }
+      self.wfile.write( json.dumps( wrapper ) )
+
 
    def do_GET( self ): #pylint: disable=invalid-name
       ''' handles get request '''
@@ -140,7 +179,7 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
 
       self.send_response( 200 )
       self.send_header( 'Access-Control-Allow-Origin', '*' )
-      self.send_header( 'Access-Control-Allow-Methods', 'OPTIONS, POST, GET' )
+      self.send_header( 'Access-Control-Allow-Methods', 'OPTIONS, POST, GET, PUT' )
       self.send_header( 'Access-Control-Allow-Headers', 'Content-type' )
       self.send_header( 'Access-Control-Allow-Headers', 'Content-length' )
       self.send_header( 'Content-type', 'text/html' )
