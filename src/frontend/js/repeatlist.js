@@ -1,24 +1,3 @@
-function submit() {
-   requester =  new XMLHttpRequest();
-   var data = new FormData();
-   document.getElementById( 'status' ).innerHTML = 'Uploading... Please Wait'
-   requester.open( 'POST', 'http://dock2:8000', true );
-   data.append( 'filetoupload', document.getElementById("filetoupload").files[0] );
-   requester.setRequestHeader( 'Content-type', 'multipart/mixed' );
-   requester.setRequestHeader( 'Username', 'charles01' );
-   requester.send( data );
-   console.log( requester.status );
-   console.log( requester.response );
-   console.log( requester.responseText );
-   requester.onreadystatechange = function() {
-      // refresh the page
-      if ( requester.readyState == XMLHttpRequest.DONE ) {
-         window.location.href = "index.html";
-		 document.getElementById( 'status' ).innerHTML = 'Finished Uploading the file'
-	  }
-   }
-}
-
 function fetchurl( id ) {
    requester =  new XMLHttpRequest();
    requester.open( 'GET', 'http://dock2:8000?action=fetchurl&id=' + id, true );
@@ -38,7 +17,7 @@ function fetchurl( id ) {
 	  }
    }
 }
-		
+
 function populate() {
    requester =  new XMLHttpRequest();
    requester.open( 'GET', 'http://dock2:8000?action=list&username=charles01', true );
@@ -62,20 +41,14 @@ function populate() {
                 + '>'
 				+ info.result[i].filename_
 				+ ' -  <a id=download'+ info.result[i].id_ +' onclick="fetchurl( \'' + info.result[i].id_ + '\')">[Get Link]</a> '
-				+ '[update] <a href="delete.php?id=' + info.result[i].id_ + '">[delete]</a></div>';
+				+ '<a href="update.php?id=' + info.result[i].id_ + '">[Update]</a> '
+				+ '<a href="delete.php?id=' + info.result[i].id_ + '">[Delete]</a></div>';
 		    }
          } else {
 		    console.log( 'Received NOT OK response' );
          }		 
 	  }
    }
-   document.getElementById( 'uploadbox' ).innerHTML += '<div class="file" '
-         + '" onmouseover="highlight(this)" onmouseleave="recover(this)">'
-		 + ''
-		 +    '<input type="file" id="filetoupload"/>'
-		 +    '<input type="submit" name="action" value="upload" onclick="submit()"/>'
-		 + ''
-		 + '</div>';
 }
 
 function highlight(e) {

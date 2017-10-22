@@ -7,17 +7,21 @@
       CloudFront Project 1
       </title>
 	  <script type="text/javascript" src="js/info.js"></script>
-	  <script type="text/javascript" src="js/delete.js"></script>
+      <script type="text/javascript" src="js/upload.js"></script>         
       <link rel="stylesheet" href="css/main.css">
    </head>
-   <body onload="populateBannerFields( <? echo $fileId ?> ); addUploadBox() ">
+   <body onload="populateBannerFields( <? echo $fileId ?> ); addUploadBox( 'update',  <? echo $fileId ?>)">
         <div id="banner">
-            File to Be Deleted
+            File to Be Updated
         </div>
+		<div id="uploadbox">
+         </div>
 		<? include 'fileinfo.php'; ?>
 		 <div id="response">
-		    <button class="clicker" onclick="deleteFile( <? echo $fileId ?> )">Confirm Delete</button>
+		    <button class="clicker">Confirm Update</button>
 			<button class="clicker" onClick="window.location.href= 'index.html'">Cancel</button>
+		 </div>
+		 <div id="status">
 		 </div>
    </body>
 </html>

@@ -8,6 +8,12 @@
    cursor: pointer;
    cursor: hand;
 }
+.uploader { 
+   background-color : lightgray;
+   color : black;
+   padding : 20px;
+   font-family : arial;
+}
 
 .field {
    background-color : #8eb7ce;
