@@ -10,7 +10,7 @@
 	  <script type="text/javascript" src="js/delete.js"></script>
       <link rel="stylesheet" href="css/main.css">
    </head>
-   <body onload="populateBannerFields( <? echo $fileId ?> ); addUploadBox() ">
+   <body onload="populateBannerFields( <? echo $fileId ?>, true ); addUploadBox() ">
         <div id="banner">
             File to Be Deleted
         </div>

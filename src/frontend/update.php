@@ -11,13 +11,13 @@
 	  <script type="text/javascript" src="js/update.js"></script> 	  
       <link rel="stylesheet" href="css/main.css">
    </head>
-   <body onload="populateBannerFields( <? echo $fileId ?> ); addUploadBox( 'update',  <? echo $fileId ?>)">
+   <body onload="populateBannerFields( <? echo $fileId ?>, false ); addUploadBox( 'update',  <? echo $fileId ?>)">
         <div id="banner">
             File to Be Updated
         </div>
 		<div id="uploadbox">
          </div>
-		<? include 'fileinfo.php'; ?>
+		<? include 'fileupdate.php'; ?>
 		 <div id="response">
 		    <button class="clicker" onClick="updateFile( <? echo $fileId ?> )">Confirm Update</button>
 			<button class="clicker" onClick="window.location.href= 'index.html'">Cancel</button>
