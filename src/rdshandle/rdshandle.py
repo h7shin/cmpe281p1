@@ -2,6 +2,7 @@
 
 import datetime
 import MySQLdb
+import os
 
 class Row( object ):
    '''
@@ -144,7 +145,7 @@ class Object( Row ):
 class RDS( object ):
    def __init__( self ):
       user = 'root'
-      passwd = raw_input( 'Enter password for this RDS instance:' )
+      passwd = os.getenv( 'RDS_PASSWORD' )
       host = 'cmpe281p1db.cmqx6tpknayx.us-east-2.rds.amazonaws.com'
       db = 'cmpe281p1'
       self.conn = MySQLdb.connect( host=host, user=user, passwd=passwd, db=db )
