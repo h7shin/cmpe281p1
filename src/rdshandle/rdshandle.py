@@ -11,19 +11,20 @@ class Row( object ):
    def insert( self, conn ):
       ''' Insert this object into database '''
       query = 'INSERT INTO {table} ( {fields} ) VALUES ( {values} )'
-      fields,values = self.keysvalues()
+      fields,values = self.keysvalues( False )
       cursor= conn.cursor()
       cursor.execute( query.format( table=self.__class__.__name__,
                                   fields=','.join( fields ),
                                   values=','.join( values ) ) )
       conn.commit()
 
-   def keysvalues( self ):
+   def keysvalues( self, skipKey=False ):
       ''' Get lists of params and lists of values '''
       keys = []
       values = []
       for k, v in self.__dict__.iteritems():
-         if k.endswith( '_' ):
+         if k.endswith( '_' ) and (
+               not skipKey or k != self.__class__.key ):
             keys.append( ''.join( k.split( '_' )[:-1] ) )
             values.append( '"' + v + '"' )
       return keys, values
@@ -32,7 +33,7 @@ class Row( object ):
       ''' Update this object in the database '''
       query = 'UPDATE {table} SET {newpairs} WHERE {key} = "{identifier}"'
       newpairs = []
-      fields, values = self.keysvalues()
+      fields, values = self.keysvalues( True )
       for i in range( len( fields ) ):
          pair = '%s = %s' % ( fields[i], values[i] )
          newpairs.append( pair )
