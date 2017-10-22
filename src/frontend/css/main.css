@@ -1,0 +1,22 @@
+.file {
+   background-color : #8eb7ce;
+   color : white;
+   padding : 10px;
+   font-family : arial;
+   border-color : gray;
+   border-width : 2px;
+}
+
+#banner {
+   background-color : gray;
+   color : white;
+   padding : 10px;
+   font-family : arial;
+   border-color : gray;
+   border-width : 2px;
+   font-size: 18px;
+   border-radius : 10px 10px 0px 0px;
+}
+
+#main {
+}
