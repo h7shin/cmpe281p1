@@ -1,6 +1,6 @@
 function fetchurl( id ) {
    requester =  new XMLHttpRequest();
-   requester.open( 'GET', 'http://dock2:8000?action=fetchurl&id=' + id, true );
+   requester.open( 'GET', 'http://elbbackend.hyunwookshin.com:8000?action=fetchurl&id=' + id, true );
    requester.send( null );
    requester.onreadystatechange = function() {
       var info;
@@ -20,7 +20,7 @@ function fetchurl( id ) {
 
 function populate() {
    requester =  new XMLHttpRequest();
-   requester.open( 'GET', 'http://dock2:8000?action=list&username=charles01', true );
+   requester.open( 'GET', 'http://elbbackend.hyunwookshin.com:8000?action=list&username=charles01', true );
    requester.send( null );
    requester.onreadystatechange = function() {
        var info;
@@ -30,6 +30,7 @@ function populate() {
          console.log( 'response :' +  requester.response );
 		 if ( requester.status == 200 ) {
 		    console.log( 'Received an OK response' );
+			console.log( requester.response );
 		    info = JSON.parse( requester.response );
 			var requesters = [];
 			for ( i = 0; i < info.result.length; i++ ) {

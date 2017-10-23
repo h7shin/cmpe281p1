@@ -1,6 +1,6 @@
 function populateBannerFields( id, readonly ) {
    requester =  new XMLHttpRequest();
-   requester.open( 'GET', 'http://dock2:8000?action=about&id=' + id, true );
+   requester.open( 'GET', 'http://elbbackend.hyunwookshin.com:8000?action=about&id=' + id, true );
    requester.send( null );
    requester.onreadystatechange = function() {
       var info;

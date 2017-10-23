@@ -1,6 +1,6 @@
 function deleteFile( id ) {
    requester =  new XMLHttpRequest();
-   requester.open( 'GET', 'http://dock2:8000?action=delete&id=' + id, true );
+   requester.open( 'GET', 'http://elbbackend.hyunwookshin.com:8000?action=delete&id=' + id, true );
    requester.send( null );
    requester.onreadystatechange = function() {
 	   console.log( requester.status );

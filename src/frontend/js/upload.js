@@ -11,7 +11,7 @@ function submit(uploadtype, id) {
    requester =  new XMLHttpRequest();
    var data = new FormData();
    document.getElementById( 'status' ).innerHTML = 'Uploading... Please Wait'
-   requester.open( 'POST', 'http://dock2:8000', true );
+   requester.open( 'POST', 'http://elbbackend.hyunwookshin.com:8000', true );
    data.append( 'filetoupload', document.getElementById("filetoupload").files[0] );
    requester.setRequestHeader( 'Content-type', 'multipart/mixed' );
    requester.setRequestHeader( 'Username', 'charles01' );
