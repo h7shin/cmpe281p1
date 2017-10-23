@@ -1,8 +1,16 @@
 #!/usr/bin/bash
 
+#
+# PLEASE RUN AS ROOT USER
+#
+
 # Steps to install php
 sudo yum install httpd -y
 sudo yum install php -y
 
+# start httpd conf
+service httpd start
+sudo chkconfig httpd on
+
 # Save resources to /var/www
-sudo cp -r cmpe281p1-frontend.tgz /var/www
+sudo tar -xvf cmpe281p1-frontend.tgz -C /var/www/html
