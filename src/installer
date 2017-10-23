@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [ "$1" == "" ]; then
+   echo "USAGE $0 <AWS-KEY> <AWS-ACCESS-ID> <AWS-SECRET-KEY> <RDS-PASSWORD>"
+   exit 1
+fi
+
+# OS level package dependencies
+sudo yum install mariadb -y
+sudo yum install python-devel -y
+sudo yum install mysql-devel -y
+sudo yum install gcc -y
+
+# python dependencies
+sudo pip install boto3
+sudo pip install dnspython
+sudo pip install MySQL-python
+
+mkdir -p /cmpe281p1
+tar -xvf $(pwd)/cmpe281p1.tgz -C /cmpe281p1
+
+export PYTHONPATH=/cmpe281p1:$PYTHONPATH
+export AWS_ACCESS_ID=$1
+export AWS_SECRET_KEY=$2
+
+# Yeah you need this.
+export RDS_PASSWORD=$3
+
+# start the server
+/cmpe281p1/backend/dumbserver.py
