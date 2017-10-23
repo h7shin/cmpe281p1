@@ -10,11 +10,11 @@ ID: 012507417
 
 ## Project Introduction
 
-This is a GitHub repository containing the project used to deploy
+This project delivers the infrastructure components and source code to deploy
 highly-available and scalable web application designed for uploading
 photos and pictures to the cloud. The user can choose to upload
 a file, replace the same file with another content, edit file
-information such as file name or description, delete file.
+information such as file name or description, and finally delete file.
 
 URL : http://elbfrontend.hyunwookshin.com
 Video Link : [Download Video](demo-video.mp4)
