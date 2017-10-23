@@ -18,9 +18,12 @@ information such as file name or description, delete file.
 
 URL : elbfrontend.hyunwookshin.com
 
+**Uploading a file**
+![Screenshot](screenshots/painting-upload.png)
+
 ## How to build artifacts from source
 
-- Clone this repo
+- Clone this repo using git
 - Go inside `src` source directory
 - Run `make all`
 - Verify that two artifacts are present (frontend and backend)
@@ -73,6 +76,21 @@ ec2-instance# ./installer <tgz-file>
 - Frontend server (CSS/Javascript/Firewall) [Completed]
 - ELB for Frontend [Completed]
 - CloudFront [Completed]
+
+
+## Screen shots
+
+**Uploading a file**
+![Screenshot](screenshots/painting-upload.png)
+
+**Deleting a file**
+![Screenshot](screenshots/painting-delete.png)
+
+**Updating a file**
+![Screenshot](screenshots/painting-update.png)
+
+**Downloading a file**
+![Screenshot](screenshots/painting-update.png)
 
 ## Resources Inventory
 
