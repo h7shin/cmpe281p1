@@ -119,7 +119,7 @@ bucket1 heath | R53 | health check | shinhw2b1.s3.amazonaws.com | TCP Port 80 He
 bucket2 heath | R53 | health check | shinhw2b2.s3.amazonaws.com | TCP Port 80 Health check on secondary origin bucket
 
 ### Failover Route (Route 53)
-The following are the two Route 53 records for Cloudfront versity Name: http://www.sjsu.edu/
+The following are the two Route 53 records for Cloudfront
 
 CNAME | FQDN | Target | Health Check
  --   |  --  |  --    | --
