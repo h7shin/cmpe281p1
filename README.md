@@ -77,6 +77,9 @@ ec2-instance# ./installer <tgz-file>
 - ELB for Frontend [Completed]
 - CloudFront [Completed]
 
+**Architecture Diagram**
+![Screenshot](architecture.png)
+
 
 ## Screen shots
 
