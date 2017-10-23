@@ -17,7 +17,7 @@ a file, replace the same file with another content, edit file
 information such as file name or description, delete file.
 
 URL : http://elbfrontend.hyunwookshin.com
-Video Link : [Download Vido](demo-video.mp4)
+Video Link : [Download Video](demo-video.mp4)
 
 **Uploading a file**
 ![Screenshot](screenshots/painting-upload.png)
@@ -57,7 +57,7 @@ ec2-instance# ./installer <tgz-file>
 
 ## Source code organization
 
-- Source are orgnizaed into packages under src
+Source code is orgnized into the following packages under `src`:
 - `backend` contains the backend application server code (Python)
 - `rdshandle` contains the RDS/MySQL thin wrapper
 - `frontend` contains the PHP/Javascript/Python for frontend
