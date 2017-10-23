@@ -90,6 +90,7 @@ cmpe281p1b2 | EC2 | t | AutoScalingP1 | 172.31.9.104 | 18.216.74.19 |  us-east-2
 
 ### EC2 Instances (Frontend Backend)
 The following are EC2 compute resouces (nano) for the frontend webservers (Apache)
+
 Name | resource | type | group | private ip | public ip | availability zone | comment
  -- | -- | -- | -- | -- | -- | -- | --
 cmpe281p1f1 | EC2 | t | AutoScalingP1-Frontend| 172.31.15.66 | 52.15.216.157 |  us-east-2a | Compute Resource 1
