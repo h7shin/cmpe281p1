@@ -147,7 +147,8 @@ class Object( Row ):
       print time
       self.updated_ = datetime.datetime.strftime( time, '%Y-%m-%d %H:%M:%S' )
 
-   def uploadedIs( self, time=datetime.datetime.now() ):
+   def uploadedIs( self ):
+      time = datetime.datetime.now()
       self.uploaded_ = datetime.datetime.strftime( time, '%Y-%m-%d %H:%M:%S' )
 
    def filenameIs( self, filename ):

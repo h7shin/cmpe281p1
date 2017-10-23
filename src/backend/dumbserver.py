@@ -108,6 +108,8 @@ class HTTPHandler( BaseHTTPServer.BaseHTTPRequestHandler ):
          # save into db
          newFile = rdshandle.Object( '', filename, username, '',  bucketkey=bucketkey )
          print newFile.bucketkey(), 'is the new bucket key'
+         newFile.uploadedIs() # will be set to current
+         newFile.updatedIs() # will be set to current
          rds.insert( ( newFile, ) )
 
       elif uploadtype == 'update':
