@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+# Steps to install php
+sudo yum install httpd -y
+sudo yum install php -y
+
+# Save resources to /var/www
+sudo cp -r cmpe281p1-frontend.tgz /var/www
