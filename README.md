@@ -16,7 +16,7 @@ photos and pictures to the cloud. The user can choose to upload
 a file, replace the same file with another content, edit file
 information such as file name or description, delete file.
 
-URL : elbfrontend.hyunwookshin.com
+URL : http://elbfrontend.hyunwookshin.com
 
 **Uploading a file**
 ![Screenshot](screenshots/painting-upload.png)
