@@ -1,4 +1,4 @@
-## CMPE282 Project 1
+## CMPE281 Project 1
 
 - *University Name*: http://www.sjsu.edu/
 - *Course*: Cloud Technologies
