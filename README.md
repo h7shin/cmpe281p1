@@ -1,10 +1,10 @@
 ## CMPE282 Project 1
 
-*University Name*: http://www.sjsu.edu/
-*Course*: Cloud Technologies
-*Professor* Sanjay Garje
-*ISA*: Divyankitha Urs
-*Student*: Hyunwook Shin https://www.linkedin.com/in/hwshin/
+- *University Name*: http://www.sjsu.edu/
+- *Course*: Cloud Technologies
+- *Professor* Sanjay Garje
+- *ISA*: Divyankitha Urs
+- *Student*: Hyunwook Shin https://www.linkedin.com/in/hwshin/
 
 ID: 012507417
 
@@ -120,6 +120,7 @@ bucket2 heath | R53 | health check | shinhw2b2.s3.amazonaws.com | TCP Port 80 He
 
 ### Failover Route (Route 53)
 The following are the two Route 53 records for Cloudfront versity Name: http://www.sjsu.edu/
+
 CNAME | FQDN | Target | Health Check
  --   |  --  |  --    | --
 dist1 | dist1.hyunwookshin.com | de4hx48qic7v4.cloudfront.net | bucket1 health
@@ -127,6 +128,7 @@ dist1 | dist1.hyunwookshin.com | d1ol4nkxls3lbv.cloudfront.net | bucket2 health
 
 ### ELB Backend
 The following are ELB backend load balancers for handling traffics to the frontend and backend application servers.
+
 Name | resource | type | availability zone | comment
  -- | -- | -- | -- | --
 BackendHTTP | ElB | application | us-east-2a, us-east-2b | ELB for Backend EC2 instances (b1 and b2)
