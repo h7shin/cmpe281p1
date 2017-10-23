@@ -80,9 +80,6 @@ ec2-instance# ./installer <tgz-file>
 
 ## Screen shots
 
-**Uploading a file**
-![Screenshot](screenshots/painting-upload.png)
-
 **Deleting a file**
 ![Screenshot](screenshots/painting-delete.png)
 
@@ -90,7 +87,11 @@ ec2-instance# ./installer <tgz-file>
 ![Screenshot](screenshots/painting-update.png)
 
 **Downloading a file**
-![Screenshot](screenshots/painting-update.png)
+![Screenshot](screenshots/painting-download.png)
+
+**Uploading a file**
+![Screenshot](screenshots/painting-upload.png)
+
 
 ## Resources Inventory
 
